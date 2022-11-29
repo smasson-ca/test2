@@ -1,0 +1,2991 @@
+{
+  "info": {
+    "description": "TAO Toolkit API document",
+    "title": "TAO Toolkit API",
+    "version": "v4.0.0"
+  },
+  "tags": [
+    {
+      "name": "DATASET",
+      "description": "Endpoints related to Dataset"
+    },
+    {
+      "name": "MODEL",
+      "description": "Endpoints related to Model"
+    }
+  ],
+  "paths": {
+    "/api/v1/login/{key}": {},
+    "/api/v1/user/{user_id}/dataset": {
+      "get": {
+        "tags": [
+          "DATASET"
+        ],
+        "summary": "List Datasets",
+        "description": "Returns the list of Datasets",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "description": "Optional skip for pagination",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Optional size for pagination",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Optional sort",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "date-descending",
+                "date-ascending",
+                "name-descending",
+                "name-ascending"
+              ]
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Optional name filter",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Optional type filter",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "object_detection",
+                "semantic_segmentation",
+                "image_classification"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returned list of Datasets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DatasetRsp"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "DATASET"
+        ],
+        "summary": "Create new Dataset",
+        "description": "Returns the new Dataset",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetReq"
+              }
+            }
+          },
+          "description": "Initial metadata for new Dataset (type and format required)",
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Retuned the new Dataset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetRsp"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, see reply body for details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{user_id}/dataset/{dataset_id}": {
+      "get": {
+        "tags": [
+          "DATASET"
+        ],
+        "summary": "Retrieve Dataset",
+        "description": "Returns the Dataset",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID of Dataset to return",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returned Dataset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetRsp"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User or Dataset not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "DATASET"
+        ],
+        "summary": "Delete Dataset",
+        "description": "Cancels all related running jobs and returns the deleted Dataset",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID of Dataset to delete",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted Dataset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetRsp"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, see reply body for details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User or Dataset not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "DATASET"
+        ],
+        "summary": "Update Dataset",
+        "description": "Returns the updated Dataset",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID of Dataset to update",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetReq"
+              }
+            }
+          },
+          "description": "Updated metadata for Dataset",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returned the updated Dataset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetRsp"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, see reply body for details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User or Dataset not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "DATASET"
+        ],
+        "summary": "Partial update Dataset",
+        "description": "Returns the updated Dataset",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID of Dataset to update",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetReq"
+              }
+            }
+          },
+          "description": "Updated metadata for Dataset",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returned the updated Dataset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetRsp"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, see reply body for details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User or Dataset not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{user_id}/dataset/{dataset_id}/upload": {
+      "post": {
+        "tags": [
+          "DATASET"
+        ],
+        "summary": "Upload Dataset",
+        "description": "Upload training and testing data",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID of Dataset",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetUpload"
+              }
+            }
+          },
+          "description": "Data file to upload (a tar.gz file)",
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Upload sucessful"
+          },
+          "400": {
+            "description": "Bad request, see reply body for details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User or Dataset not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{user_id}/dataset/{dataset_id}/specs/{action}/schema": {
+      "get": {
+        "tags": [
+          "DATASET"
+        ],
+        "summary": "Retrieve Specs schema",
+        "description": "Returns the Specs schema for a given action",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID for Dataset",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "action",
+            "in": "path",
+            "description": "Action name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returned the Specs schema for given action",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User, Dataset or Action not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{user_id}/dataset/{dataset_id}/specs/{action}": {
+      "get": {
+        "tags": [
+          "DATASET"
+        ],
+        "summary": "Retrieve Dataset Specs",
+        "description": "Returns the saved Dataset Specs for a given action",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID of Dataset",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "action",
+            "in": "path",
+            "description": "Action name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returned the saved Dataset Specs for specified action",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User, Dataset or Action not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "DATASET"
+        ],
+        "summary": "Save Dataset Specs",
+        "description": "Save the Dataset Specs for a given action",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID of Dataset",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "action",
+            "in": "path",
+            "description": "Action name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          },
+          "description": "Dataset Specs",
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Returned the saved Dataset Specs for specified action",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid specs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User, Dataset or Action not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "DATASET"
+        ],
+        "summary": "Update Dataset Specs",
+        "description": "Update the Dataset Specs for a given action (same as Save/POST)",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID of Dataset",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "action",
+            "in": "path",
+            "description": "Action name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          },
+          "description": "Dataset Specs",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returned the updated Dataset Specs for specified action",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid specs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User, Dataset or Action not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{user_id}/dataset/{dataset_id}/job": {
+      "post": {
+        "tags": [
+          "DATASET"
+        ],
+        "summary": "Run Dataset Jobs",
+        "description": "Asynchronously starts a list of Dataset Actions and returns corresponding Job IDs",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID for Dataset",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DatasetActions"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Returned the list of Job IDs corresponding to requested Dataset Actions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User or Dataset not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "DATASET"
+        ],
+        "summary": "List Jobs for Dataset",
+        "description": "Returns the list of Jobs",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID for Dataset",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "description": "Optional skip for pagination",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Optional size for pagination",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Optional sort",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "date-descending",
+                "date-ascending"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returned list of Jobs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DatasetJob"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User or Dataset not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{user_id}/dataset/{dataset_id}/job/{job_id}": {
+      "get": {
+        "tags": [
+          "DATASET"
+        ],
+        "summary": "Retrieve Job for Dataset",
+        "description": "Returns the Job",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID of Dataset",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "job_id",
+            "in": "path",
+            "description": "Job ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returned Job",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetJob"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User, Dataset or Job not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "DATASET"
+        ],
+        "summary": "Delete Dataset Job",
+        "description": "delete Dataset Job",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID for Dataset",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "job_id",
+            "in": "path",
+            "description": "ID for Job",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully requested deletion of specified Job ID"
+          },
+          "400": {
+            "description": "Bad request, see reply body for details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User, Dataset or Job not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{user_id}/dataset/{dataset_id}/job/{job_id}/cancel": {
+      "post": {
+        "tags": [
+          "DATASET"
+        ],
+        "summary": "Cancel Dataset Job",
+        "description": "Cancel Dataset Job",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID for Dataset",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "job_id",
+            "in": "path",
+            "description": "ID for Job",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully requested cancelation of specified Job ID (asynchronous)"
+          },
+          "404": {
+            "description": "User, Dataset or Job not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{user_id}/dataset/{dataset_id}/job/{job_id}/download": {
+      "get": {
+        "tags": [
+          "DATASET"
+        ],
+        "summary": "Download Job Artifacts",
+        "description": "Download the Artifacts produced by a given job",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID of Dataset",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "job_id",
+            "in": "path",
+            "description": "Job ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returned Job Artifacts",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User, Model or Job not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{user_id}/model": {
+      "get": {
+        "tags": [
+          "MODEL"
+        ],
+        "summary": "List Models",
+        "description": "Returns the list of Models",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "description": "Optional skip for pagination",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Optional size for pagination",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Optional sort",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "date-descending",
+                "date-ascending",
+                "name-descending",
+                "name-ascending"
+              ]
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Optional name filter",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "arch",
+            "in": "query",
+            "description": "Optional network architecture filter",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "detectnet_v2"
+              ]
+            }
+          },
+          {
+            "name": "read_only",
+            "in": "query",
+            "description": "Optional read_only filter",
+            "required": false,
+            "allowEmptyValue": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returned the list of Models",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModelRsp"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MODEL"
+        ],
+        "summary": "Create new Model",
+        "description": "Returns the new Model",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModelReq"
+              }
+            }
+          },
+          "description": "Initial metadata for new Model (ptm or network_arch required)",
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Returned the new Model",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelRsp"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, see reply body for details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{user_id}/model/{model_id}": {
+      "get": {
+        "tags": [
+          "MODEL"
+        ],
+        "summary": "Retrieve Model",
+        "description": "Returns the Model",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "model_id",
+            "in": "path",
+            "description": "ID of Model to return",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returned the Model",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelRsp"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User or Model not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "MODEL"
+        ],
+        "summary": "Delete Model",
+        "description": "Cancels all related running jobs and returns the deleted Model",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "model_id",
+            "in": "path",
+            "description": "ID of Model to delete",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returned the deleted Model",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelRsp"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User or Model not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "MODEL"
+        ],
+        "summary": "Update Model",
+        "description": "Returns the updated Model",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "model_id",
+            "in": "path",
+            "description": "ID of Model to update",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModelReq"
+              }
+            }
+          },
+          "description": "Updated metadata for Model",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returned the updated Model",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelRsp"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, see reply body for details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User or Model not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "MODEL"
+        ],
+        "summary": "Partial update Model",
+        "description": "Returns the updated Model",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "model_id",
+            "in": "path",
+            "description": "ID of Model to update",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModelReq"
+              }
+            }
+          },
+          "description": "Updated metadata for Model",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returned the updated Model",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelRsp"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, see reply body for details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User or Model not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{user_id}/model/{model_id}/specs/{action}/schema": {
+      "get": {
+        "tags": [
+          "MODEL"
+        ],
+        "summary": "Retrieve Specs schema",
+        "description": "Returns the Specs schema for a given action",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "model_id",
+            "in": "path",
+            "description": "ID for Model",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "action",
+            "in": "path",
+            "description": "Action name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returned the Specs schema for given action",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Dataset or Action not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{user_id}/model/{model_id}/specs/{action}": {
+      "get": {
+        "tags": [
+          "MODEL"
+        ],
+        "summary": "Retrieve Model Specs",
+        "description": "Returns the Model Specs for a given action",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "model_id",
+            "in": "path",
+            "description": "ID of Model",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "action",
+            "in": "path",
+            "description": "Action name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returned the Model Specs for specified action",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User, Model or Action not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MODEL"
+        ],
+        "summary": "Save Model Specs",
+        "description": "Save the Model Specs for a given action",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "model_id",
+            "in": "path",
+            "description": "ID of Model",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "action",
+            "in": "path",
+            "description": "Action name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          },
+          "description": "Model Specs",
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Returned the saved Model Specs for specified action",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid specs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User, Model or Action not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "MODEL"
+        ],
+        "summary": "Update Model Specs",
+        "description": "Update the Model Specs for a given action (same as Save/POST)",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "model_id",
+            "in": "path",
+            "description": "ID of Model",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "action",
+            "in": "path",
+            "description": "Action name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          },
+          "description": "Model Specs",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returned the updated Model Specs for specified action",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid specs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User, Model or Action not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{user_id}/model/{model_id}/job": {
+      "post": {
+        "tags": [
+          "MODEL"
+        ],
+        "summary": "Run Model Jobs",
+        "description": "Asynchronously starts a list of Model Actions and returns corresponding Job IDs",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "model_id",
+            "in": "path",
+            "description": "ID for Model",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ModelActions"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Returned the list of Job IDs corresponding to requested Model Actions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User or Model not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "MODEL"
+        ],
+        "summary": "List Jobs for Model",
+        "description": "Returns the list of Jobs",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "model_id",
+            "in": "path",
+            "description": "ID for Model",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "description": "Optional skip for pagination",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Optional size for pagination",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Optional sort",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "date-descending",
+                "date-ascending"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returned list of Jobs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModelJob"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User or Model not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{user_id}/model/{model_id}/job/{job_id}": {
+      "get": {
+        "tags": [
+          "MODEL"
+        ],
+        "summary": "Retrieve Job for Model",
+        "description": "Returns the Job",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "model_id",
+            "in": "path",
+            "description": "ID of Model",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "job_id",
+            "in": "path",
+            "description": "Job ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returned Job",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelJob"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User, Model or Job not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "MODEL"
+        ],
+        "summary": "Delete Model Job",
+        "description": "Delete Model Job",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "model_id",
+            "in": "path",
+            "description": "ID for Model",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "job_id",
+            "in": "path",
+            "description": "ID for Job",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully requested deletion of specified Job ID"
+          },
+          "400": {
+            "description": "Bad request, see reply body for details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User, Model or Job not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{user_id}/model/{model_id}/job/{job_id}/cancel": {
+      "post": {
+        "tags": [
+          "MODEL"
+        ],
+        "summary": "Cancel Model Job (or pause training)",
+        "description": "Cancel Model Job (or pause training)",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "model_id",
+            "in": "path",
+            "description": "ID for Model",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "job_id",
+            "in": "path",
+            "description": "ID for Job",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully requested cancelation or training pause of specified Job ID (asynchronous)"
+          },
+          "404": {
+            "description": "User, Model or Job not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{user_id}/model/{model_id}/job/{job_id}/resume": {
+      "post": {
+        "tags": [
+          "MODEL"
+        ],
+        "summary": "Resume Model Job",
+        "description": "Resume Model Job (train/retrain only)",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "model_id",
+            "in": "path",
+            "description": "ID for Model",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "job_id",
+            "in": "path",
+            "description": "ID for Job",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully requested resume of specified Job ID (asynchronous)"
+          },
+          "404": {
+            "description": "User, Model or Job not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{user_id}/model/{model_id}/job/{job_id}/download": {
+      "get": {
+        "tags": [
+          "MODEL"
+        ],
+        "summary": "Download Job Artifacts",
+        "description": "Download the Artifacts produced by a given job",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "model_id",
+            "in": "path",
+            "description": "ID of Model",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "job_id",
+            "in": "path",
+            "description": "Job ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returned Job Artifacts",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User, Model or Job not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRsp"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "openapi": "3.0.3",
+  "components": {
+    "schemas": {
+      "DetailedStatus": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "Graph": {
+        "type": "object",
+        "properties": {
+          "metric": {
+            "type": "string",
+            "nullable": true
+          },
+          "x_min": {
+            "type": "integer",
+            "nullable": true
+          },
+          "x_max": {
+            "type": "integer",
+            "nullable": true
+          },
+          "y_min": {
+            "type": "number",
+            "nullable": true
+          },
+          "y_max": {
+            "type": "number",
+            "nullable": true
+          },
+          "values": {
+            "type": "array",
+            "items": {}
+          },
+          "units": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CategoryWise": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number",
+            "nullable": true
+          }
+        }
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "metric": {
+            "type": "string"
+          },
+          "category_wise_values": {
+            "type": "array",
+            "items": {
+              "nullable": true,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/CategoryWise"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "KPI": {
+        "type": "object",
+        "properties": {
+          "metric": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "number",
+            "nullable": true
+          }
+        }
+      },
+      "Stats": {
+        "type": "object",
+        "properties": {
+          "metric": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "JobResult": {
+        "type": "object",
+        "properties": {
+          "detailed_status": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedStatus"
+              }
+            ]
+          },
+          "graphical": {
+            "type": "array",
+            "items": {
+              "nullable": true,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Graph"
+                }
+              ]
+            }
+          },
+          "categorical": {
+            "type": "array",
+            "items": {
+              "nullable": true,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Category"
+                }
+              ]
+            }
+          },
+          "kpi": {
+            "type": "array",
+            "items": {
+              "nullable": true,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/KPI"
+                }
+              ]
+            }
+          },
+          "stats": {
+            "type": "array",
+            "items": {
+              "nullable": true,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Stats"
+                }
+              ]
+            }
+          },
+          "epoch": {
+            "type": "integer",
+            "nullable": true
+          },
+          "cur_epoch": {
+            "type": "number",
+            "nullable": true
+          },
+          "max_epoch": {
+            "type": "integer",
+            "nullable": true
+          },
+          "time_per_epoch": {
+            "type": "string",
+            "nullable": true
+          },
+          "eta": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "DatasetJob": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "parent_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_modified": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "action": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Done",
+              "Running",
+              "Error",
+              "Pending"
+            ]
+          },
+          "result": {
+            "$ref": "#/components/schemas/JobResult"
+          }
+        }
+      },
+      "DatasetRsp": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_modified": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string",
+            "format": "url",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "object_detection",
+              "semantic_segmentation",
+              "image_classification",
+              "instance_segmentation",
+              "character_recognition",
+              "speech",
+              "mel_spectrogram"
+            ]
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "kitti",
+              "pascal_voc",
+              "raw",
+              "coco_raw",
+              "unet",
+              "coco",
+              "lprnet",
+              "ljspeech",
+              "hifigan",
+              "default",
+              "custom",
+              "auxillary"
+            ]
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "jobs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatasetJob"
+            }
+          }
+        }
+      },
+      "ErrorRsp": {
+        "type": "object",
+        "properties": {
+          "error_desc": {
+            "type": "string"
+          },
+          "error_code": {
+            "type": "integer"
+          }
+        }
+      },
+      "DatasetReq": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string",
+            "format": "url"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "object_detection",
+              "semantic_segmentation",
+              "image_classification",
+              "instance_segmentation",
+              "character_recognition",
+              "speech",
+              "mel_spectrogram"
+            ]
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "kitti",
+              "pascal_voc",
+              "raw",
+              "coco_raw",
+              "unet",
+              "coco",
+              "lprnet",
+              "ljspeech",
+              "hifigan",
+              "default",
+              "custom",
+              "auxillary"
+            ]
+          }
+        }
+      },
+      "DatasetUpload": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "DatasetActions": {
+        "type": "object",
+        "properties": {
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "job": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "ModelJob": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "parent_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_modified": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "action": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Done",
+              "Running",
+              "Error",
+              "Pending"
+            ]
+          },
+          "result": {
+            "$ref": "#/components/schemas/JobResult"
+          }
+        }
+      },
+      "ModelRsp": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_modified": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string",
+            "format": "url",
+            "nullable": true
+          },
+          "ngc_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "additional_id_info": {
+            "type": "string",
+            "nullable": true
+          },
+          "encryption_key": {
+            "type": "string"
+          },
+          "network_arch": {
+            "type": "string",
+            "enum": [
+              "detectnet_v2",
+              "faster_rcnn",
+              "yolo_v4",
+              "yolo_v4_tiny",
+              "yolo_v3",
+              "ssd",
+              "dssd",
+              "retinanet",
+              "unet",
+              "lprnet",
+              "classification",
+              "efficientdet",
+              "mask_rcnn",
+              "multitask_classification",
+              "spectro_gen",
+              "vocoder"
+            ]
+          },
+          "ptm": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "dataset_type": {
+            "type": "string",
+            "enum": [
+              "object_detection",
+              "semantic_segmentation",
+              "image_classification",
+              "instance_segmentation",
+              "character_recognition",
+              "speech",
+              "mel_spectrogram"
+            ]
+          },
+          "eval_dataset": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "inference_dataset": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "calibration_dataset": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "train_datasets": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "read_only": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "jobs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ModelJob"
+            }
+          },
+          "automl_enabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "automl_algorithm": {
+            "type": "string",
+            "nullable": true
+          },
+          "automl_max_recommendations": {
+            "type": "integer",
+            "nullable": true
+          },
+          "automl_delete_intermediate_ckpt": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "automl_R": {
+            "type": "integer",
+            "nullable": true
+          },
+          "automl_nu": {
+            "type": "integer",
+            "nullable": true
+          },
+          "metric": {
+            "type": "string",
+            "nullable": true
+          },
+          "epoch_multiplier": {
+            "type": "integer",
+            "nullable": true
+          },
+          "automl_add_hyperparameters": {
+            "type": "string",
+            "nullable": true
+          },
+          "automl_remove_hyperparameters": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ModelReq": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string",
+            "format": "url"
+          },
+          "ngc_path": {
+            "type": "string"
+          },
+          "additional_id_info": {
+            "type": "string"
+          },
+          "encryption_key": {
+            "type": "string"
+          },
+          "network_arch": {
+            "type": "string",
+            "enum": [
+              "detectnet_v2",
+              "faster_rcnn",
+              "yolo_v4",
+              "yolo_v4_tiny",
+              "yolo_v3",
+              "ssd",
+              "dssd",
+              "retinanet",
+              "unet",
+              "lprnet",
+              "classification",
+              "efficientdet",
+              "mask_rcnn",
+              "multitask_classification",
+              "spectro_gen",
+              "vocoder"
+            ]
+          },
+          "ptm": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "eval_dataset": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "inference_dataset": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "calibration_dataset": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "train_datasets": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "read_only": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "encryption_key"
+        ]
+      },
+      "ModelActions": {
+        "type": "object",
+        "properties": {
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "job": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
+}
